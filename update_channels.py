@@ -1,4 +1,4 @@
-"""This service allows to write new channels to db"""
+"""This service allows to update channels to db"""
 import os
 import sys
 import time
@@ -6,6 +6,7 @@ import MySQLdb
 from rq import Worker, Queue, Connection
 from methods.connection import get_redis, get_cursor
 
+r = get_redis()
 
 def update_channels(data):
     """Updates channels in database (table channels)
@@ -38,8 +39,6 @@ def update_channels(data):
 
 
 if __name__ == '__main__':
-    time.sleep(5)
-    r = get_redis()
     q = Queue('update_channels', connection=r)
     with Connection(r):
         worker = Worker([q], connection=r,  name='update_channels')
